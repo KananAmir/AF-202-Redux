@@ -19,7 +19,7 @@ const CustomerList = () => {
 
   const dispatch = useDispatch();
   const handleAddToFavorites = (customer) => {
-    if (!favorites.includes(customer)) {
+    if (!favorites.find((q) => q.id === customer.id)) {
       dispatch(addToFavoritesAction(customer));
     } else {
       window.alert("Already Favorited");
@@ -46,8 +46,13 @@ const CustomerList = () => {
     {
       title: "Add To Favorites",
       render: (obj) => (
-        <Button type="primary" onClick={() => handleAddToFavorites(obj)}>
-          {!favorites.includes(obj) ? "Add to Favorites" : "Favorited Already"}
+        <Button
+          type={!favorites.find((q) => q.id === obj.id) ? "ghost " : "primary"}
+          onClick={() => handleAddToFavorites(obj)}
+        >
+          {!favorites.find((q) => q.id === obj.id)
+            ? "Add to Favorites"
+            : "Favorited Already"}
         </Button>
       ),
     },
