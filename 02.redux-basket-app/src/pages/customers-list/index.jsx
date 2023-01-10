@@ -7,8 +7,14 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Space } from "antd";
 
 const CustomerList = () => {
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+
   const [customers, setCustomers] = useState([]);
   const favorites = useSelector((state) => state.favoritesReducer);
+
+  const dispatch = useDispatch();
 
   const getData = async () => {
     const response = await axios("https://northwind.vercel.app/api/customers");
@@ -19,7 +25,6 @@ const CustomerList = () => {
     getData();
   }, []);
 
-  const dispatch = useDispatch();
   const handleAddToFavorites = (customer) => {
     if (!favorites.find((q) => q.id === customer.id)) {
       dispatch(addToFavoritesAction(customer));
@@ -27,9 +32,7 @@ const CustomerList = () => {
       window.alert("Already Favorited");
     }
   };
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef(null);
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -151,6 +154,7 @@ const CustomerList = () => {
       title: "CompanyName",
       dataIndex: "companyName",
       sorter: (a, b) => (a.companyName > b.companyName ? 1 : -1),
+      ...getColumnSearchProps("companyName"),
     },
     {
       title: "Contact Title",

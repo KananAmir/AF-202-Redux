@@ -7,7 +7,11 @@ import App from "./App";
 import "./index.css";
 import { rootReducer } from "./redux/reducer";
 
-const store = createStore(rootReducer);
+export const store = createStore(rootReducer);
+
+//getState
+//dispatch
+//subscribe
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
