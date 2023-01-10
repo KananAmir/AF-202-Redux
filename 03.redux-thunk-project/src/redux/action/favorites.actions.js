@@ -1,3 +1,5 @@
+//ACTION CREATORS
+
 export const addToFavoritesAction = (obj) => {
   return {
     type: "ADD_TO_FAVORITES",

@@ -5,21 +5,22 @@ import { addToFavoritesAction } from "../../redux/action/favorites.actions";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Space } from "antd";
+import {
+  deletCustomerAction,
+  getAllCustomersAction,
+} from "../../redux/action/customers.actions";
+import Loading from "../../components/loading";
 
 const CustomerList = () => {
-  const [customers, setCustomers] = useState([]);
   const favorites = useSelector((state) => state.favoritesReducer);
-
-  const getData = async () => {
-    const response = await axios("https://northwind.vercel.app/api/customers");
-    setCustomers(await response.data);
-  };
+  // const customers = useSelector((state) => state.customersReducer.data);
+  const customersData = useSelector((state) => state.customersReducer);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getData();
+    dispatch(getAllCustomersAction());
   }, []);
 
-  const dispatch = useDispatch();
   const handleAddToFavorites = (customer) => {
     if (!favorites.find((q) => q.id === customer.id)) {
       dispatch(addToFavoritesAction(customer));
@@ -30,6 +31,11 @@ const CustomerList = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+
+  const handleDeleteCustomer = (id) => {
+    dispatch(deletCustomerAction(id));
+    // dispatch(getAllCustomersAction());
+  };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -163,6 +169,14 @@ const CustomerList = () => {
       render: (el) => `${el.city}, ${el.country}`,
     },
     {
+      title: "DELETE",
+      render: (element) => (
+        <Button danger onClick={() => handleDeleteCustomer(element.id)}>
+          Delete
+        </Button>
+      ),
+    },
+    {
       title: "Add To Favorites",
       render: (obj) => (
         <Button
@@ -177,7 +191,19 @@ const CustomerList = () => {
     },
   ];
 
-  return <Table columns={columns} dataSource={customers} rowKey={"id"} />;
+  return (
+    <>
+      {customersData.loading ? (
+        <Loading />
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={customersData.data}
+          rowKey={"id"}
+        />
+      )}
+    </>
+  );
 };
 
 export default CustomerList;
