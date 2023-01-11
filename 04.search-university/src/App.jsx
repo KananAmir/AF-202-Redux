@@ -8,7 +8,7 @@ const { Search } = Input;
 
 function App() {
   const [searchValue, setSearchValue] = useState("");
-  const universities = useSelector((state) => state);
+  const universities = useSelector((state) => state.searchUniversityReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
