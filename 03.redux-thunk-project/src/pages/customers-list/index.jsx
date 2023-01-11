@@ -1,7 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToFavoritesAction } from "../../redux/action/favorites.actions";
+import {
+  addToFavoritesAction,
+  removeFromFavoritesAction,
+} from "../../redux/action/favorites.actions";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
 import { Table, Button, Input, Space } from "antd";
@@ -10,6 +13,7 @@ import {
   getAllCustomersAction,
 } from "../../redux/action/customers.actions";
 import Loading from "../../components/loading";
+import { message, Popconfirm } from "antd";
 
 const CustomerList = () => {
   const favorites = useSelector((state) => state.favoritesReducer);
@@ -34,6 +38,7 @@ const CustomerList = () => {
 
   const handleDeleteCustomer = (id) => {
     dispatch(deletCustomerAction(id));
+    dispatch(removeFromFavoritesAction(id));
     // dispatch(getAllCustomersAction());
   };
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -147,7 +152,13 @@ const CustomerList = () => {
         text
       ),
   });
-
+  const confirm = (id) => {
+    handleDeleteCustomer(id);
+    message.success("Click on Yes");
+  };
+  const cancel = (e) => {
+    message.error("Click on No");
+  };
   const columns = [
     {
       title: "ID",
@@ -171,9 +182,16 @@ const CustomerList = () => {
     {
       title: "DELETE",
       render: (element) => (
-        <Button danger onClick={() => handleDeleteCustomer(element.id)}>
-          Delete
-        </Button>
+        <Popconfirm
+          title="Delete the task"
+          description="Are you sure to delete this task?"
+          onConfirm={() => confirm(element.id)}
+          onCancel={cancel}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button danger>Delete</Button>
+        </Popconfirm>
       ),
     },
     {

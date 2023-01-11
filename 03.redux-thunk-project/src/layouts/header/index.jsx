@@ -8,6 +8,9 @@ const Header = () => {
       <nav>
         <ul>
           <li>
+            <NavLink to={"/add-customer"}>Add Customer</NavLink>
+          </li>
+          <li>
             <NavLink to={"/customers"}>Customers List</NavLink>
           </li>
           <li>
