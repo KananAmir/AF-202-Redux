@@ -60,8 +60,9 @@ const Products = () => {
                     <div className="btn">
                       <Button
                         onClick={() => {
-                          dispatch(deleteData(element.id));
-                          dispatch(fetchData(""));
+                          dispatch(deleteData(element.id)).then(() => {
+                            dispatch(fetchData(""));
+                          });
                         }}
                         type="primary"
                         danger
